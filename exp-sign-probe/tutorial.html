@@ -1,0 +1,438 @@
+<title>符号探针实验教程 · exp-sign-probe</title>
+<style>
+:root {
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --accent:#2a78d6; --accent-ink:#1c5cab; --wash:rgba(42,120,214,.07);
+  --good:#006300; --warn:#8a5b00; --bad:#b62e2e;
+  --code-bg:rgba(11,11,11,.055); --eq-bg:#f4f3ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --accent:#3987e5; --accent-ink:#6da7ec; --wash:rgba(57,135,229,.10);
+    --good:#2fbf2f; --warn:#fab219; --bad:#e66767;
+    --code-bg:rgba(255,255,255,.08); --eq-bg:#141413;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --accent:#3987e5; --accent-ink:#6da7ec; --wash:rgba(57,135,229,.10);
+  --good:#2fbf2f; --warn:#fab219; --bad:#e66767;
+  --code-bg:rgba(255,255,255,.08); --eq-bg:#141413;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.75 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; }
+a { color:var(--accent-ink); text-underline-offset:2px; }
+.layout { display:grid; grid-template-columns:216px minmax(0,1fr); gap:36px;
+  max-width:1120px; margin:0 auto; padding:36px 28px 120px; }
+nav.toc { position:sticky; top:28px; align-self:start; font-size:13px; }
+nav.toc .toc-t { font-weight:700; font-size:12px; letter-spacing:.08em; color:var(--muted);
+  text-transform:uppercase; margin-bottom:10px; }
+nav.toc a { display:block; color:var(--ink2); text-decoration:none; padding:4.5px 10px;
+  border-left:2px solid var(--grid); }
+nav.toc a:hover { color:var(--ink); background:var(--wash); }
+nav.toc a.on { color:var(--accent-ink); border-left-color:var(--accent); font-weight:650; }
+main { min-width:0; max-width:840px; }
+.eyebrow { font-size:11.5px; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--accent-ink); font-weight:700; }
+h1 { font-size:27px; line-height:1.3; margin:8px 0 10px; letter-spacing:-.01em; text-wrap:balance; }
+.lede { color:var(--ink2); font-size:15.5px; max-width:70ch; }
+h2 { font-size:20px; margin:52px 0 12px; padding-top:18px; border-top:1px solid var(--grid);
+  letter-spacing:-.01em; }
+h2 .n { color:var(--accent-ink); font-variant-numeric:tabular-nums; margin-right:8px; }
+h3 { font-size:15.5px; margin:26px 0 8px; }
+p { margin:10px 0; color:var(--ink); max-width:76ch; }
+p.sub, li.sub { color:var(--ink2); }
+.fine { color:var(--muted); font-size:12.5px; }
+code, .file { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86em; background:var(--code-bg); padding:1.5px 6px; border-radius:4px; }
+pre { background:var(--code-bg); border:1px solid var(--border); border-radius:8px;
+  padding:12px 14px; overflow-x:auto; font-size:12.5px; line-height:1.6; }
+pre code { background:none; padding:0; }
+ul,ol { padding-left:22px; } li { margin:6px 0; }
+var, .mv { font-family:"Times New Roman",Georgia,serif; font-style:italic; font-size:1.07em; }
+sub,sup { font-size:.68em; }
+.eq { display:flex; align-items:center; gap:14px; background:var(--eq-bg);
+  border:1px solid var(--border); border-radius:8px; padding:13px 16px; margin:14px 0;
+  overflow-x:auto; }
+.eq .body { flex:1; font-family:"Times New Roman",Georgia,serif; font-size:16.5px;
+  white-space:nowrap; }
+.eq .tag { flex:none; color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums; }
+.eq .rm { font-style:normal; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:16px 18px; margin:14px 0; }
+.callout { border-left:3px solid var(--accent); background:var(--surface);
+  border-top:1px solid var(--border); border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border); border-radius:8px; padding:12px 16px; margin:16px 0; }
+.callout.warn { border-left-color:#ec835a; }
+.callout.good { border-left-color:#0ca30c; }
+.callout .t { font-weight:700; font-size:13px; margin-bottom:4px; }
+table { width:100%; border-collapse:collapse; font-size:13.5px; margin:12px 0; }
+th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--grid); vertical-align:top; }
+thead th { color:var(--muted); font-weight:650; font-size:11.5px; letter-spacing:.05em;
+  border-bottom:1px solid var(--axis); }
+.tw { overflow-x:auto; }
+td code { white-space:nowrap; }
+.pipe { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.pipe .st { flex:1 1 120px; min-width:118px; background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; padding:10px 12px; }
+.pipe .st b { display:block; font-size:13px; }
+.pipe .st .n { color:var(--accent-ink); font-weight:700; font-size:11px; }
+.pipe .st span { display:block; color:var(--muted); font-size:11.5px; margin-top:3px; line-height:1.45; }
+.pipe .ar { align-self:center; color:var(--muted); }
+.chk { list-style:none; padding-left:0; }
+.chk li { padding-left:26px; position:relative; }
+.chk li::before { content:"✓"; position:absolute; left:4px; color:var(--good); font-weight:700; }
+.tag-good { color:var(--good); font-weight:650; }
+.tag-warn { color:var(--warn); font-weight:650; }
+.tag-bad  { color:var(--bad); font-weight:650; }
+details { margin:10px 0; } summary { cursor:pointer; font-weight:600; font-size:14px; }
+.ft { border-top:1px solid var(--grid); margin-top:60px; padding-top:12px; }
+@media (max-width:880px){ .layout{display:block; padding:24px 16px 90px;} nav.toc{display:none;} }
+@media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto!important;} }
+</style>
+
+<div class="layout">
+<nav class="toc" aria-label="目录">
+  <div class="toc-t">目录</div>
+  <a href="#s1">1 这个实验回答什么</a>
+  <a href="#s2">2 流水线总览</a>
+  <a href="#s3">3 实验设置</a>
+  <a href="#s4">4 核心数学</a>
+  <a href="#s5">5 各阶段:存什么、算什么</a>
+  <a href="#s6">6 最终指标(公式)</a>
+  <a href="#s7">7 验证什么:判读规则</a>
+  <a href="#s8">8 跟着跑一遍</a>
+  <a href="#s9">9 常见问题</a>
+</nav>
+<main>
+
+<div class="eyebrow">exp-sign-probe · 实验教程</div>
+<h1>影响力符号探针(D2/D3):设置、计算与判读</h1>
+<p class="lede">这份教程解释 <code>exp-sign-probe/</code> 里的每一步:实验怎么设置、每个阶段往磁盘里存什么、
+每个量用什么公式算出来、最后用哪些预先写好的规则下判断。零训练、纯推理,单卡 4–6 小时。</p>
+
+<h2 id="s1"><span class="n">1</span>这个实验回答什么问题</h2>
+<p>Targeted-OPD 的全部理论保证都经过一个量:每个 token 的<b>影响力符号</b> sign(<var>ι<sub>t</sub></var>)——
+它说"强化这个 token 会提高还是降低正确率"。训练时这个符号由每题 m=8 条采样组成的"小陪审团"估出来(m 即日志里的 group_size,报告表格中的 G 列)。
+复盘发现两个可疑数字:错位质量 ≈ 0.46(纯噪声恰好给 0.50)、对半一致率 ≈ 0.76(两半共享数据,会虚高)。
+<b>但符号的真实准确率从来没被测过</b>——这就是诊断计划里的疑点 F1,整个链条上承重的未知数。</p>
+<p>本实验用 <b>R=256</b> 条采样组成"大陪审团"造出参考真值,然后:</p>
+<ul>
+  <li><b>D2</b>:按训练的完整算法,用大小 m ∈ {8, 16, 32, 64} 的小陪审团重估符号,量它们对参考真值的准确率——回答"<b>训练配置下符号到底多准,加大陪审团能买回多少</b>";</li>
+  <li><b>D3</b>:把训练里的两票(全组留一 vs 对面半批)换成三票对照,量出 0.76 一致率里有多少是共享数据带来的虚高——回答"<b>agree 这个仪表本身可不可信</b>"。</li>
+</ul>
+
+<h2 id="s2"><span class="n">2</span>流水线总览:六个阶段</h2>
+<div class="pipe">
+  <div class="st"><span class="n">阶段 1</span><b>rollout</b><span>vLLM 采样:粗筛 64 题 → 选 8 题 × 256 条</span></div>
+  <div class="ar">→</div>
+  <div class="st"><span class="n">阶段 2</span><b>teacher</b><span>教师前向:每个 token 的 log π<i>_T</i></span></div>
+  <div class="ar">→</div>
+  <div class="st"><span class="n">阶段 3</span><b>reference</b><span>256 条大陪审团 → 参考真值 ι*(含两半自检)</span></div>
+  <div class="ar">→</div>
+  <div class="st"><span class="n">阶段 4</span><b>d2</b><span>小陪审团扫描 m∈{8..64} × 各 32 个</span></div>
+  <div class="ar">→</div>
+  <div class="st"><span class="n">阶段 5</span><b>d3</b><span>200 个训练组 × 三票对照</span></div>
+  <div class="ar">→</div>
+  <div class="st"><span class="n">阶段 6</span><b>analyze</b><span>summary.json + report.md(自动判读)</span></div>
+</div>
+<p class="sub">每个阶段把产物写到磁盘、发现产物已存在就跳过——任何一步中断都可以直接重新提交续跑。
+sbatch 里六个阶段是六次独立的 Python 调用,保证显存彻底释放。</p>
+
+<h2 id="s3"><span class="n">3</span>实验设置</h2>
+<div class="tw"><table>
+<thead><tr><th>项</th><th>取值</th><th>为什么</th></tr></thead>
+<tbody>
+<tr><td>学生模型</td><td><code>Qwen2.5-0.5B-Instruct</code>(可选挂 LoRA 检查点)</td><td>与训练战役相同;默认探"初始策略",加 <code>--adapter</code> 可探任意训练中期检查点</td></tr>
+<tr><td>教师模型</td><td><code>Qwen2.5-Math-1.5B-Instruct</code></td><td>只用来算 d<sub>t</sub>(质量权重),与训练一致</td></tr>
+<tr><td>数据</td><td>DeepMath-103K 难度 (0, 3.0]</td><td>与正在进行的战役同一难度带(可切 gsm8k)</td></tr>
+<tr><td>题目筛选</td><td>64 候选 × 16 条粗采 → 取通过率最接近 0.5 的 8 道</td><td><b>必须有对有错</b>:全对/全错的题优势 A≡0,任何陪审团都退化、没有符号可言</td></tr>
+<tr><td>采样温度</td><td>1.0(锁死)</td><td>采样分布必须等于被分析的策略(τ=1 是自然分布,不是贪心;见讨论纪要 §3)</td></tr>
+<tr><td>生成上限</td><td><b>1024</b>(训练时 512/768,按讨论放宽;可再调 2048)</td><td>截断的解答自动判错,会污染优势值;放宽后截断率应 &lt;5%(存在 <code>meta.json</code> 里可查)</td></tr>
+<tr><td>参考陪审团 R</td><td>256 条/题</td><td>大到足以当"真值",且用 128 vs 128 自检其稳定性(§7)</td></tr>
+<tr><td>随机性</td><td>seed=0 固定;完整配置落盘 <code>manifest.json</code></td><td>可复现;防"日志头 ≠ 实际配置"(诊断 F9)</td></tr>
+</tbody></table></div>
+
+<h2 id="s4"><span class="n">4</span>核心数学:从采样到符号</h2>
+<p>下面五个式子就是全部计算。记号:一道题采了陪审团 <var>J</var>,其<b>大小</b>记 <var>m</var> = |<var>J</var>|(训练日志、结果报告与仪表盘表格里的 <b>G 列指的就是 m</b>;本教程把字母 G 留给下面的陪审团<b>矩阵</b> <var>G<sub>J</sub></var>,避免一个符号两用);
+第 <var>i</var> 条的判分 <var>V<sub>i</sub></var> ∈ {0,1};token <var>t</var> 处学生的隐状态
+<var>h<sub>t</sub></var> ∈ ℝ<sup>896</sup>(末层 norm 后)、全词表分布 <var>π<sub>t</sub></var> ∈ ℝ<sup>151936</sup>、实际采到的 token <var>y<sub>t</sub></var>。</p>
+
+<h3>4.1 优势(每条 rollout 一个数)</h3>
+<div class="eq"><div class="body"><var>A<sub>i</sub></var> <span class="rm">=</span> <var>V<sub>i</sub></var> − <span class="rm">mean</span><sub><var>k</var>∈<var>J</var></sub>(<var>V<sub>k</sub></var>)</div><div class="tag">(1)</div></div>
+<p class="sub">组内均值做基线(训练约定,含自身)。整组同对同错 ⇒ 所有 <var>A</var>≡0 ⇒ <b>退化陪审团</b>,单独计数、不产出符号。</p>
+
+<h3>4.2 教师信号(每个 token 一个数)</h3>
+<div class="eq"><div class="body"><var>d<sub>t</sub></var> <span class="rm">=</span> log <var>π<sub>T</sub></var>(<var>y<sub>t</sub></var> | <var>s<sub>t</sub></var>) − log <var>π<sub>S</sub></var>(<var>y<sub>t</sub></var> | <var>s<sub>t</sub></var>)</div><div class="tag">(2)</div></div>
+<p class="sub">"教师比学生多喜欢这个 token 多少"。本实验里它不参与符号,只提供质量权重 |<var>d·ι</var>|(§6)。</p>
+
+<h3>4.3 陪审团矩阵 G<sub>J</sub>(整个陪审团压缩成一个 V×h 矩阵——注意它与大小 m 是两回事)</h3>
+<div class="eq"><div class="body"><var>G<sub>J</sub></var> <span class="rm">=</span> Σ<sub><var>i</var>∈<var>J</var></sub> <var>A<sub>i</sub></var> Σ<sub><var>t</var>∈<var>i</var></sub> (<var>e</var><sub><var>y<sub>t</sub></var></sub> − <var>π<sub>t</sub></var>) <var>h<sub>t</sub></var><sup>⊤</sup>  ∈ ℝ<sup><var>V</var>×<var>h</var></sup></div><div class="tag">(3)</div></div>
+<p class="sub">这是"验证器策略梯度" ĝ<sub>Q</sub> 的最后一层(unembedding)块:答对组(<var>A</var>&gt;0)的 token 把梯度往里加、答错组往外减。
+求和后具体来自哪些 state 已被吸收——它只是"参数往哪动能提高正确率"的一个估计。代码:<code>influence.accumulate_G</code>。</p>
+
+<h3>4.4 影响力打分(每个 token 与 G 做一次矩阵-向量乘)</h3>
+<div class="eq"><div class="body"><var>ι̂<sub>J</sub></var>(<var>t</var>) <span class="rm">=</span> (<var>G<sub>J</sub></var> <var>h<sub>t</sub></var>)<sub><var>y<sub>t</sub></var></sub> − ⟨<var>π<sub>t</sub></var>, <var>G<sub>J</sub></var> <var>h<sub>t</sub></var>⟩</div><div class="tag">(4)</div></div>
+<p class="sub">即论文式 (15):(G h)<sub>y</sub> 减去 softmax 均值。为正 = 按陪审团的估计,强化这个 token 会提高正确率。
+不同 rollout 不需要访问相同 state——耦合发生在参数空间,展开后是隐状态相似度 ⟨h<sub>s</sub>, h<sub>t</sub>⟩ 在传递信用。代码:<code>influence.iota_from_G</code>。逐票的数值走查见 §4.7。</p>
+
+<h3>4.5 精确留一(防"自己给自己投票")</h3>
+<p>给第 <var>j</var> 条 rollout 的 token 打分时,必须把 <var>j</var> 自己从陪审团里去掉,否则每个 token 会继承本条解答的对错符号(论文附录 B 的偏差)。
+去掉后恰好等于减一个同 rollout 的 Gram 修正:</p>
+<div class="eq"><div class="body">corr<sub><var>j</var></sub>(<var>t</var>) <span class="rm">=</span> Σ<sub><var>s</var>∈<var>j</var></sub> ⟨<var>h<sub>s</sub></var>, <var>h<sub>t</sub></var>⟩ · [ 𝟙{<var>y<sub>s</sub></var>=<var>y<sub>t</sub></var>} − <var>π<sub>s</sub></var>(<var>y<sub>t</sub></var>) − <var>π<sub>t</sub></var>(<var>y<sub>s</sub></var>) + ⟨<var>π<sub>s</sub></var>, <var>π<sub>t</sub></var>⟩ ]</div><div class="tag">(5)</div></div>
+<div class="eq"><div class="body"><var>ι̂</var><sup>(−<var>j</var>)</sup><sub><var>J</var></sub>(<var>t</var>) <span class="rm">=</span> <var>ι̂<sub>J</sub></var>(<var>t</var>) − <var>A<sub>j</sub></var> · corr<sub><var>j</var></sub>(<var>t</var>)</div><div class="tag">(6)</div></div>
+<div class="callout good"><div class="t">已验证</div>
+式 (6) 不是近似:<code>tests/test_influence_small.py</code> 用暴力法(真的把 rollout <var>j</var> 从陪审团里拿掉、重建 G 再打分)对照,
+误差 &lt; 10<sup>−4</sup>,连同 G 累加、半批相加等 5 项恒等式全部通过。</div>
+
+<h3>4.6 分半投票(训练门控的机制)</h3>
+<p>陪审团按成员位置奇偶分成两半 → 两个半矩阵 <var>G</var><sub>0</sub>、<var>G</var><sub>1</sub>(<b>优势仍用全陪审团均值</b>,训练约定)。
+一个 token 的"对面半批票" = 用不含自己那半的 G 按式 (4) 打分(天然无需留一)。训练时:两票同号才翻转,否则跟随教师。</p>
+
+<h3 id="s47">4.7 具体例子:ι̂ 到底是对"哪条 rollout 的哪个 state"算的</h3>
+<p>设某道探针题 <var>x</var>,一个陪审团 <var>J</var> 抽中 <var>m</var>=8 条 rollout,判分
+<var>V</var> = (1, 0, 0, 1, 0, 0, 0, 0):组内均值 0.25,按式 (1) 优势
+<var>A</var> = (+0.75, −0.25, −0.25, +0.75, −0.25, −0.25, −0.25, −0.25)。
+现在看一个具体的 token:<b>第 3 条 rollout(答错,A₃ = −0.25)的第 17 个生成位置</b>。
+它的 state <var>s</var> = (题目 <var>x</var> + r₃ 已写下的前 16 个 token);学生在此处有隐状态
+<var>h</var> ∈ ℝ<sup>896</sup>、全词表分布 <var>π</var>;实际采到的 token 设为 <var>y</var> = “3”。计算分三步:</p>
+<ol>
+<li>用 8 条 rollout 的全部 ≈3,200 个 token 按式 (3) 累加出 <var>G<sub>J</sub></var>(形状恒为 V×h,与 m 无关);</li>
+<li><b>留一</b>:按式 (5)(6) 减去 r₃ 自己 ≈400 个 token 的贡献 → 记 <var>G<sub>J</sub></var><sup>(−3)</sup>——证据只剩<b>其余 7 条</b>的 ≈2,800 个 token;</li>
+<li>按式 (4):ι̂ = (<var>G<sub>J</sub></var><sup>(−3)</sup> <var>h</var>)<sub>“3”</sub> − ⟨<var>π</var>, <var>G<sub>J</sub></var><sup>(−3)</sup> <var>h</var>⟩。得到一个标量,只取它的符号。</li>
+</ol>
+<p><b>它是怎么"跨 rollout"比较的?</b>把第 3 步沿式 (5) 的核恒等式对整个留一陪审团展开:</p>
+<div class="eq"><div class="body">ι̂(<var>t</var>) <span class="rm">=</span> Σ<sub><var>s</var> ∈ 其余 7 条的 token</sub> <var>A</var><sub>rollout(<var>s</var>)</sub> · ⟨<var>h<sub>s</sub></var>, <var>h<sub>t</sub></var>⟩ · [ 𝟙{<var>y<sub>s</sub></var>=<var>y<sub>t</sub></var>} − <var>π<sub>s</sub></var>(<var>y<sub>t</sub></var>) − <var>π<sub>t</sub></var>(<var>y<sub>s</sub></var>) + ⟨<var>π<sub>s</sub></var>, <var>π<sub>t</sub></var>⟩ ]</div><div class="tag">(5′)</div></div>
+<p class="sub">读法:其余 7 条 rollout 的<b>每个 token 投一票</b>,票值 = 它所属 rollout 的优势 ×
+两个 state 的表示相似度 ⟨h<sub>s</sub>, h<sub>t</sub>⟩ × 词面一致性修正(方括号)。
+例如:答对的 r₁(A=+0.75)在某个隐状态相似的推理位置(⟨h_s,h_t⟩ 大)也写了 “3”(𝟙 项 = 1)→ 正票,
+"答对的人在类似局面也这么走" ⇒ 强化;答错的 r₅ 在相似局面写了 “3” → 负票。
+注意 r₃ 的第 17 位完全可以和 r₇ 的第 213 位发生作用——<b>从不需要对齐位置或匹配 state,
+匹配由表示空间的内积自动完成</b>;不同长度、不同解法的 rollout 之间信息因此流得动。</p>
+<p class="sub">两个顺带的推论:① <b>估计目标是固定的总体量,不随 m 变</b>——对给定 θ 和 token,
+ι<sub>t</sub> = ⟨g_Q(x) 的 unembedding 块, 该 token 的梯度⟩(同一道题条件下的验证器策略梯度)。
+随 m 变的只是估计值的<b>尺度</b>:代码沿用训练的"非归一化求和"约定(G 不除以 m),
+于是 ι̂<sub>sum</sub> = m · ι̂<sub>mean</sub>,其中均值版 ι̂<sub>mean</sub> 以 sd ∝ 1/√m 收敛到总体量
+(基线 V̄→p(x)、留一去自项后偏差为 O(1/m) 二阶)。因为下游只消费符号,而 sign 对正缩放不变,
+省掉归一化无伤——但也因此<b>幅度既不该跨 m 比较、也不携带多少可靠性信息</b>(十分位校准所示)。
+一个白送的预测:符号判对率 ≈ Φ(√m·|ι|/σ),是 <b>√m 型缓坡</b>——与 D2 曲线"m 每翻倍约 +4–6pp、到 64 仍未饱和"吻合;
+② 若这 8 条恰好全对或全错,所有 A≡0,式 (5′) 每票皆零——退化陪审团没有符号可言。</p>
+
+<h3 id="s48">4.8 跨陪审团大小 m 的比较为什么公平:证据侧 vs 考卷侧</h3>
+<p><b>先说清陪审团从哪来</b>:整个实验只在阶段 1 生成过一次 rollout(每题 256 条,共 8×256 = 2,048 条),
+<b>之后再没有任何新采样</b>。D2 的每个陪审团都是从<b>本题</b>这 256 条池子里<b>重抽的子集</b>:
+对每个大小 m,独立重复 32 次"不放回抽 m 条"。"不放回"只约束<b>单个陪审团内部</b>
+(同一陪审团里不会有重复的 rollout,模拟训练组);<b>陪审团之间独立重抽,同一条 rollout 可进多个陪审团</b>。
+于是一道题在 m=64 档共有 32×64 = 2,048 个成员席位,由 256 条去坐——平均每条坐 8 个席位,
+这就是下表"期望被抽进 32·m/256 个陪审团"的含义。策略冻结 ⇒ 从池子抽 m 条与新采 m 条分布等价;
+而<b>复用同一批 token 是设计的前提</b>——参考真值 ι* 只对这批 token 算过,考新 token 就没有标准答案可对。
+副作用仅有陪审团间共享成员带来的相关性,它影响 32 团平均的误差条,不影响单团估计的无偏性。
+代码:<code>run_d2_stage</code> 外层 <code>for k in range(32)</code>,内层 <code>members = rng.choice(R, size=m, replace=False)</code>。</p>
+<p>在此基础上,分清两个"token 数":</p>
+<div class="tw"><table>
+<thead><tr><th></th><th>证据侧(定一个符号用了多少证据)</th><th>考卷侧(哪些 token 被打分)</th></tr></thead>
+<tbody>
+<tr><td><var>m</var> = 8</td><td>其余 7 条 ≈ 2,800 个 token</td>
+<td rowspan="2">同一批:每题 R=256 条 rollout 的全部 token。每条 rollout 期望被抽进 32·m/256 个陪审团(m=8 约 1 次;m=64 约 8 次)</td></tr>
+<tr><td><var>m</var> = 64</td><td>其余 63 条 ≈ 25,000 个 token</td></tr>
+</tbody></table></div>
+<ul>
+<li><b>证据侧是实验的自变量</b>:准确率随 m 单调上升,说的就是"证据越多、符号越准"——欠采样结论的直接来源;</li>
+<li><b>考卷侧分布不变</b>:报告表里 token 数从 ~51 万涨到 ~421 万,是<b>打分事件数</b>(token × 陪审团),不是换了考题——大 m 只是把同一批 token 重复评了 ≈8 次,降方差、不引偏;</li>
+<li>逐 token 的质量权重 |d·ι*| 与参考答案(R=256 + 留一)对所有 m 是<b>同一份</b>;</li>
+<li>唯一的小选择效应:退化陪审团被跳过(m=8 时约 2–4%,报告中列出),同一 rollout 在其他陪审团照样被评,可忽略;</li>
+<li><b>忠实性约定</b>:训练里 m=8 的组只给自己组员的 token 定符号,探针照做(陪审团只给成员打分;考卷覆盖靠每档 32 次重采样);另一种设计——让小陪审团给全部 256 条打分——统计上更省,但不再是训练里发生的事;</li>
+<li>内证:D3 的 acc1 与 D2 的 m=8 行几乎相同(DeepMath 58.6% ↔ 58.7%;GSM8K 63.9% ↔ 64.5%)——同一估计量在两个独立重采样方案下读数一致。</li>
+</ul>
+
+
+<h2 id="s5"><span class="n">5</span>各阶段详解:存什么文件、算什么</h2>
+
+<h3>阶段 1 · rollout(vLLM 采样)</h3>
+<p><b>算</b>:先对 64 道候选题各采 16 条粗筛出通过率,选最接近 0.5 的 8 道;再对每道选中题采 256 条(温度 1.0、上限 1024),逐条判分。</p>
+<div class="tw"><table>
+<thead><tr><th>文件</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>screen.json</code></td><td>64 道候选题的粗筛通过率(题目筛选的证据)</td></tr>
+<tr><td><code>questions.json</code></td><td>选中 8 题:粗筛/主采样通过率、<b>截断率</b>(应 &lt;5%)、prompt token ids</td></tr>
+<tr><td><code>q*/rollouts.jsonl</code></td><td>每行一条:<code>completion_ids</code>(token 序列)、<code>verdict</code>(0/1)、<code>truncated</code>、原文</td></tr>
+<tr><td><code>manifest.json</code> / <code>versions.json</code></td><td>解析后的完整配置与包版本(复现凭证)</td></tr>
+</tbody></table></div>
+
+<h3>阶段 2 · teacher(教师前向)</h3>
+<p><b>算</b>:教师对每条 rollout 前向一次,取实际采到 token 上的 log <var>π<sub>T</sub></var>。
+<b>存</b>:<code>q*/teacher_logp.npz</code>(每条 rollout 一个长度 T 的数组)。之后教师即卸载。</p>
+
+<h3>阶段 3 · reference(参考真值)——最重要的一张表</h3>
+<p><b>算</b>:全部 256 条按式 (1)(3) 建 <var>G</var><sub>ref</sub>;同时按奇偶建 <var>G</var><sub>A</sub>、<var>G</var><sub>B</sub>(128 条各半,自检用)。
+再对每个 token 按式 (4)(6) 打分得到参考影响力 <var>ι*</var>,以及两半各自给的符号。
+<b>存</b>:<code>q*/tokens.npz</code>,每行一个 token:</p>
+<div class="tw"><table>
+<thead><tr><th>列</th><th>含义</th><th>来自</th></tr></thead><tbody>
+<tr><td><code>rollout, pos</code></td><td>token 的地址(第几条、第几个)——所有后续表用它对齐</td><td>—</td></tr>
+<tr><td><code>y</code></td><td>token id</td><td>采样</td></tr>
+<tr><td><code>d</code></td><td>教师信号 <var>d<sub>t</sub></var>,式 (2)</td><td>阶段 2 − 本阶段学生 logP</td></tr>
+<tr><td><code>ref_iota</code></td><td><b>参考影响力 <var>ι*</var></b>:R=256 大陪审团 + 精确留一,式 (4)(6)</td><td>本阶段</td></tr>
+<tr><td><code>signA, signB</code></td><td>参考两半(128/128)各自的符号——参考自稳定性检验用</td><td>本阶段</td></tr>
+<tr><td><code>ttype</code></td><td>token 类型:数字 / 符号 / 单词 / 其他(分解分析用)</td><td>分词器解码</td></tr>
+<tr><td><code>trunc, verdict</code></td><td>所属 rollout 是否截断、是否判对</td><td>阶段 1</td></tr>
+</tbody></table></div>
+
+<h3>阶段 4 · d2(陪审团大小扫描)</h3>
+<p><b>算</b>:对每个大小 m ∈ {8, 16, 32, 64}(报告列名 G),每道题独立重采 32 个陪审团(不放回)。全对/全错的陪审团记为退化、跳过。
+对每个非退化陪审团,<b>完全按训练算法</b>算出其成员 token 的:</p>
+<ul>
+  <li><code>iota_hat</code> = 全陪审团 + 精确留一的估计(训练里的 <code>iota</code>,式 (4)(6) 用小 G);</li>
+  <li><code>alt_sign</code> = 对面半批的符号(训练里的 <code>iota_alt</code>,§4.6)。</li>
+</ul>
+<p><b>存</b>:<code>q*/d2.npz</code>(size, jury, rollout, pos, iota_hat, alt_sign)+ <code>d2_juries.json</code>(每个陪审团:是否退化、组内通过率)。跨 m 比较的公平性分析见 §4.8。</p>
+
+<h3>阶段 5 · d3(三票对照)</h3>
+<p><b>算</b>:模拟 200 个训练组(m=8),每个 token 三票——</p>
+<ul>
+  <li><code>v1</code> 全组留一(训练的 <code>iota</code>;陪审团 = 其余 7 条);</li>
+  <li><code>v2</code> 对面半批(训练的 <code>iota_alt</code>;陪审团 = 对面 4 条);</li>
+  <li><code>v3</code> 本半批去己(陪审团 = 本半另外 3 条)——<b>与 v2 的陪审团不相交</b>,这才是真独立的两票。</li>
+</ul>
+<p class="sub">关键:v1 的陪审团(7 条)完整包含 v2 的陪审团(4 条),所以训练的 agree(v1 vs v2)天然偏高;v3 vs v2 才是干净的分半信度。
+<b>存</b>:<code>q*/d3.npz</code>(group, rollout, pos, v1, v2, v3)。</p>
+
+<h3>阶段 6 · analyze(汇总)</h3>
+<p><b>存</b>:<code>results/summary.json</code>(全部数字)+ <code>results/report.md</code>(中文报告,预写判读已嵌入)。公式见下节。</p>
+
+<h2 id="s6"><span class="n">6</span>最终指标:每个数怎么算</h2>
+
+<h3>6.1 质量加权符号准确率(D2 的主指标)</h3>
+<p>把小陪审团的符号 <var>ŝ<sub>t</sub></var> = sign(<code>iota_hat</code>) 与参考符号 <var>s*<sub>t</sub></var> = sign(<code>ref_iota</code>) 逐 token 对比(双方非零才计入):</p>
+<div class="eq"><div class="body">acc<sub><var>w</var></sub> <span class="rm">=</span> Σ<sub><var>t</var></sub> <var>w<sub>t</sub></var> · 𝟙{<var>ŝ<sub>t</sub></var> = <var>s*<sub>t</sub></var>} <span class="rm">/</span> Σ<sub><var>t</var></sub> <var>w<sub>t</sub></var> ,  <var>w<sub>t</sub></var> <span class="rm">=</span> |<var>d<sub>t</sub></var> · <var>ι*<sub>t</sub></var>|</div><div class="tag">(7)</div></div>
+<p class="sub">同时报不加权与 |<var>ι*</var>| 加权两个变体。<b>为什么用 |d·ι| 当权重</b>:它就是论文里的"质量"——命题 B.2 说带估计符号的实际一阶增益 =
+判对质量 − 判错质量,于是有一个精确换算:</p>
+<div class="eq"><div class="body"><span class="rm">实际一阶增益</span> <span class="rm">=</span> (2·acc<sub><var>w</var></sub> − 1) · Σ<sub><var>t</var></sub> |<var>d<sub>t</sub></var> <var>ι*<sub>t</sub></var>|</div><div class="tag">(8)</div></div>
+<p class="sub">所以 acc<sub>w</sub> = 0.5 ⇔ 方法的可证优势被符号误差完全抵消;acc<sub>w</sub> 每高出 0.5 一分,优势就按比例兑现一分。这是"符号准确率"与论文定理之间的直接桥梁。</p>
+
+<h3>6.2 门控指标(训练机制值不值)</h3>
+<p>门控保留率 = 两票一致(<var>ŝ<sub>t</sub></var> = <code>alt_sign</code> ≠ 0)的 token 占比;门控后准确率 = 在保留子集上重算式 (7)。
+门控的价值 = (门控后准确率 − 门控前) × 保留率:提升大、保留高才值得。</p>
+
+<h3>6.3 校准与分解</h3>
+<ul>
+  <li><b>十分位校准</b>:按 |<code>iota_hat</code>| 从小到大分十档,每档算式 (7)——检验"估计越自信是否越准"(理想应单调上升;若平坦 = 幅度不携带信息);</li>
+  <li><b>token 类型分解</b>:数字 / 符号 / 单词 / 其他各算一个 acc——看符号到底在哪类 token 上有信号(若只在格式类 token 上准,方向就是在放大 F8 的噪声);</li>
+  <li><b>退化率</b>:每档 G 的退化陪审团占比(G 越小越容易全对/全错——targeted 在退化组自动变回 OPD 的量化)。</li>
+</ul>
+
+<h3>6.4 参考自稳定性(真值自己可不可信)</h3>
+<p>把 256 条拆成不相交的两半(各 128),各自独立算符号,按式 (7) 的权重算一致率。
+两半完全独立,若各以概率 <var>p</var> 命中"无穷陪审团"的真符号:</p>
+<div class="eq"><div class="body"><span class="rm">agree</span> <span class="rm">=</span> <var>p</var><sup>2</sup> + (1−<var>p</var>)<sup>2</sup>  ⇒  <var>p</var> <span class="rm">=</span> (1+√(2·agree−1))/2</div><div class="tag">(9)</div></div>
+<p class="sub">报告里设了 85% 的门槛:低于它就提示"参考本身欠稳,绝对数值保守解读(相对比较仍有效),可加大 R"。</p>
+
+<h3>6.5 D3 的四个数</h3>
+<div class="tw"><table>
+<thead><tr><th>量</th><th>定义(全部按式 (7) 的质量权重)</th><th>读法</th></tr></thead><tbody>
+<tr><td><code>agree12</code></td><td>sign(v1) vs sign(v2) 一致率</td><td><b>训练日志里 agree≈0.76 的对应物</b>——若复现,证明探针对训练机制忠实(校准点)</td></tr>
+<tr><td><code>agree32</code></td><td>sign(v3) vs sign(v2) 一致率(陪审团不相交)</td><td>真·分半信度</td></tr>
+<tr><td><code>inflation</code></td><td>agree12 − agree32</td><td><b>0.76 里的水分</b>:共享陪审团抬高了多少</td></tr>
+<tr><td><code>acc1/acc2/acc3</code></td><td>三票各自 vs 参考真值</td><td>票的真实准确率;acc1 与 agree12 的差 = 之前被"互相印证"掩盖的部分</td></tr>
+</tbody></table></div>
+
+<h2 id="s7"><span class="n">7</span>验证什么:三层校验 + 预写判读</h2>
+<h3>7.1 交付前已验证(不用你操心,但应该知道)</h3>
+<ul class="chk">
+  <li>核心公式 5 项恒等式暴力对照通过(含式 (6) 精确留一:与"真拿掉重建 G"逐元素一致);</li>
+  <li>分析管道用合成数据端到端校验:植入准确率 0.55 → 测得 0.547,植入退化率 0.25 → 0.25,植入 agree12 0.76 → 0.753 —— 统计与对齐逻辑正确。</li>
+</ul>
+<h3>7.2 运行时自检(报告里自动出现)</h3>
+<ul>
+  <li><b>截断率</b>(questions.json / 报告头):应 &lt;5%,否则把上限调到 2048 重跑阶段 1;</li>
+  <li><b>参考自稳定性</b> ≥ 85%(式 (9)),否则加大 R;</li>
+  <li><b>校准点</b>:agree12 应落在训练日志的 0.76–0.77 附近——对上了,探针对训练机制的复现就是忠实的,后面的结论才有资格外推回训练。</li>
+</ul>
+<h3>7.3 科学判读(预先写死,防事后合理化)</h3>
+<div class="card">
+<p style="margin-top:0"><b>看 report.md 里 G=8(即 m=8)那一行的质量加权准确率:</b></p>
+<ul>
+  <li><span class="tag-bad">&lt; 60%</span> ⇒ <b>F1 实锤</b>:训练配置下符号接近抛硬币,方法退化为"OPD+噪声"。下一步只有一条:修估计器(用大 G 只采样不训练、换 LoRA 块投影、G 跨步滑动平均),别再跑任何 targeted 战役;</li>
+  <li><span class="tag-warn">60–70%</span> ⇒ 有弱信号。看 G=32/64 是否明显抬升:抬升 ⇒ "定符号用大陪审团、训练只回传少数"是明确解法(诊断计划 E5 臂);不抬升 ⇒ 最后一层子空间可能天然信号不足,试换投影;</li>
+  <li><span class="tag-good">≥ 70%</span> ⇒ 符号可用。结果不好另有原因(F2 沙盒推不动 / F3 截断 / F6 漂移),按计划回阶段 C 校准基线。</li>
+</ul>
+<p style="margin-bottom:0">辅助判读:门控后提升 × 保留率决定门控去留;inflation 大 ⇒ 以后训练仪表改用 v3-vs-v2 口径;
+token 类型分解决定符号是否只在格式 token 上"准"。式 (8) 把 acc 直接换算成方法每步能兑现的一阶增益。</p>
+</div>
+
+<h2 id="s8"><span class="n">8</span>跟着跑一遍(Amarel)</h2>
+<pre><code># 0) 上传
+scp -r exp-sign-probe amarel:/scratch/$USER/
+# 1) 登录节点装环境(一次)
+cd /scratch/$USER/exp-sign-probe && bash slurm/setup_env.sh
+# 2) 登录节点下载模型/数据(计算节点无外网)
+conda activate opd-probe && bash slurm/00_download.sh
+# 3) 冒烟(2 题 × 32 条,~15 分钟)—— 通过再跑正式
+sbatch slurm/submit_smoke.sbatch
+# 4) 正式(8 题 × 256 条,约 4–6 小时)
+sbatch slurm/submit_probe.sbatch
+# 5) 读结果
+cat /scratch/$USER/opd_sign_probe/run1/results/report.md</code></pre>
+<p><b>每步跑完看什么:</b></p>
+<ol>
+  <li>阶段 1 后:<code>questions.json</code> —— 8 题通过率是否都在 0.15–0.85(混合)、<code>trunc_rate</code> 是否 &lt;5%;</li>
+  <li>阶段 3 后:日志里每题 token 数(约 3–5 万/题)是否正常;</li>
+  <li>阶段 6 后:<code>report.md</code> 从上往下 —— 先看 §0 参考稳定性(真值可信吗),再看 §1 的 G=8 行(主判读),再看 §2 的 agree12(校准点)与 inflation。</li>
+</ol>
+<p class="sub">第二步实验(可选):把 Drive 上任一 <code>step{N}/adapter</code> 拷来,<code>--adapter</code> 挂上重跑,
+对比"初始 vs 训练中期"的符号质量变化。分区名 <code>gpu</code> 按课题组配额修改。</p>
+
+<h2 id="s9"><span class="n">9</span>常见问题</h2>
+<details><summary>为什么温度必须 1.0,不能用贪心或降温?</summary>
+<p class="sub">符号刻画的是"当前策略"的性质,采样分布必须等于该策略的自然分布(τ=1 是随机采样,贪心是 τ→0)。
+降温采样 = 从另一个分布取样,估的就不是训练时那个对象了;而且贪心会让同题 256 条完全一样,陪审团直接退化。</p></details>
+<details><summary>为什么一定要挑"有对有错"的题?</summary>
+<p class="sub">所有信号都从优势 A = V − 组均值来。全对或全错 ⇒ A≡0 ⇒ G≡0 ⇒ 没有任何符号。粗筛选通过率≈0.5 的题让退化陪审团尽量少
+(退化率本身也是 D2 的输出之一——它量化了训练里"targeted 悄悄变回 OPD"的比例)。</p></details>
+<details><summary>参考真值凭什么算"真"?</summary>
+<p class="sub">它不是绝对真值,是 R=256 的大样本估计。所以报告第一项就是自检:把 256 拆成两个独立的 128,按式 (9) 看一致率并反解出单半准确率 p。
+两半一致率 ≥85% 才继续;不够就加大 R。所有 D2/D3 结论都是"相对这个参考"的,报告里如实标注。</p></details>
+<details><summary>为什么主指标用 |d·ι| 加权,而不是每个 token 一票?</summary>
+<p class="sub">因为训练里 token 的奖励幅度是 |d|、理论增益是 |d·ι| 的质量:符号在高质量 token 上判错的代价远大于低质量 token。
+式 (8) 说明质量加权准确率可以直接换算成方法每步实际兑现的一阶增益——这是与论文命题 B.2 严格对应的口径。不加权版本也同时报告。</p></details>
+<details><summary>D3 为什么要第三票?两票不够吗?</summary>
+<p class="sub">训练的两票(全组留一 vs 对面半批)共享数据:前者的陪审团(7 条)完整包含后者的(4 条),一致率天然虚高。
+第三票"本半批去己"(3 条)与对面半批完全不相交,v3-vs-v2 才是干净的分半信度;差值 inflation 就是训练仪表 0.76 里的水分。</p></details>
+<details><summary>陪审团大小 m 变大时,表里的 token 数涨到几百万——比较还公平吗?</summary>
+<p class="sub">公平。首先,陪审团不是新生成的 rollout——全程只有阶段 1 采过的每题 256 条,陪审团是对这个固定池子的重抽子集(团内不放回、团间独立)。其次,表中 token 数是"打分事件数"(token × 陪审团),不是不同的 token 集合:所有 m 档打分的都是同一批每题 R=256 条 rollout 的 token,每条 rollout 期望被抽进 32·m/256 个陪审团(m=8 约 1 次、m=64 约 8 次)。大 m 只是重复评分,降方差不引偏;真正被操纵的自变量是证据侧——每个符号背后其余 m−1 条的 token 量。详见 §4.8。</p></details>
+<details><summary>这个实验为什么不用训练就能回答 F1?</summary>
+<p class="sub">符号质量是"当前策略 + 估计算法"的性质,不是训练过程的性质。冻结策略下把估计算法原样搬来、对着大样本参考打分即可。
+训练只会改变策略从而改变符号质量的数值(所以第二步建议再探一个训练中期检查点),但"G=8 下符号可不可信"在初始策略上就能裁决。</p></details>
+
+<div class="ft fine">
+配套材料:<code>exp-sign-probe/README.md</code>(操作手册)· <code>exp-0715/implementation_diagnosis_plan.md</code>(D2/D3 所属的整体诊断计划)·
+<code>exp-0715/discussion_notes_20260715.md</code>(错位质量 / 对半一致率 / 温度 / KL / 成本定位的讨论)·
+复盘仪表盘(中/英)。公式编号 (1)–(9)(及 §4.7 的核展开 (5′))与 <code>probe/influence.py</code>、<code>probe/analysis.py</code> 中实现一一对应。生成于 2026-07-15,更新于 2026-07-16(记号统一:陪审团大小 → m;新增 §4.7–4.8,含"陪审团 = 固定池子的重抽子集"与"estimand 固定、求和约定致幅度随 m 涨"两处澄清)。
+</div>
+
+</main>
+</div>
+<script>
+(function(){
+  var links = document.querySelectorAll("nav.toc a");
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute("href").slice(1)] = a; });
+  var obs = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        links.forEach(function(a){ a.classList.remove("on"); });
+        var a = map[e.target.id]; if (a) a.classList.add("on");
+      }
+    });
+  }, {rootMargin: "-15% 0px -75% 0px"});
+  document.querySelectorAll("main h2[id]").forEach(function(h){ obs.observe(h); });
+})();
+</script>

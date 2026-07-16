@@ -1,0 +1,13 @@
+# D2/D3 符号准确率探针 —— 配置(字段含义见 probe/config.py;此处只列常改的)
+dataset: gsm8k               # 第二臂:交叉验证(混合题多、无截断、教师权重受 F8 轻微污染,主读 |ι| 加权)
+n_questions: 8
+rollouts_per_question: 256   # 参考陪审团 R
+max_new_tokens: 1024         # GSM8K 解答短,1024 绰绰有余
+jury_sizes: [8, 16, 32, 64]
+juries_per_size: 32
+d3_group_size: 8
+d3_groups_per_question: 25
+include_truncated: true      # 忠实训练口径;上限已放宽,截断应很少
+adapter_path: null           # 探训练中期检查点时填 LoRA 目录
+forward_batch: 4
+seed: 0

@@ -1,0 +1,157 @@
+MATH 战役 v2 (r=32 + grad_accum harness) — 训练日志 (2026-07-13, 进行中)
+配置: Qwen2.5-0.5B-Instruct (LoRA r=32, alpha=64, 17.6M/3.44%) <- Qwen2.5-Math-1.5B-Instruct
+训练带 DeepMath 难度 (0,3.0] (3434 题; 校准: 学生 0.310 / teacher 0.680)
+每步 = 1 题 x grad_accum 4 x G=8 = 32 rollouts (有效批 32); 目标 800 步 = 25,600 rollouts
+rollout 上限 768 (prompt 512), 温度 1.0, lr 1e-5 warmup20+cosine->0.1(按800步铺), kl=0
+训练期评测每 50 步, n=200 (MATH-500[:200], 基座 0.315, 噪声 ±3.3pt), 贪心 cap 1024
+快照每 100 步 -> /content/drive/MyDrive/OPD/{mode}_deepmath_seed0; 步速 ~121-126s
+本文件截至各运行 ~step 350-368; 最终判决待报告集 MATH-500[200:500] (n=300) 快照复评
+
+=== mode=targeted (分半门控版 Algorithm 1) ===
+[step 0] pass@1=0.315
+[step 10] loss=-0.1304 acc_in_batch=0.16 nondegen=0.38 misaligned_mass=0.493 agree=0.77 len=436 cap=0.56 lr=5.0e-06
+[step 20] loss=-0.1173 acc_in_batch=0.25 nondegen=0.44 misaligned_mass=0.523 agree=0.79 len=432 cap=0.44 lr=1.0e-05
+[step 30] loss=-0.1912 acc_in_batch=0.12 nondegen=0.25 misaligned_mass=0.270 agree=0.80 len=425 cap=0.45 lr=1.0e-05
+[step 40] loss=-0.1669 acc_in_batch=0.11 nondegen=0.31 misaligned_mass=0.356 agree=0.79 len=455 cap=0.61 lr=1.0e-05
+[step 50] loss=-0.0607 acc_in_batch=0.22 nondegen=0.50 misaligned_mass=0.483 agree=0.80 len=398 cap=0.33 lr=1.0e-05
+[step 50] >>> pass@1=0.340
+[step 60] loss=-0.0806 acc_in_batch=0.09 nondegen=0.25 misaligned_mass=0.501 agree=0.76 len=430 cap=0.50 lr=9.9e-06
+[step 70] loss=-0.1039 acc_in_batch=0.12 nondegen=0.25 misaligned_mass=0.395 agree=0.78 len=427 cap=0.48 lr=9.9e-06
+[step 80] loss=-0.0985 acc_in_batch=0.22 nondegen=0.38 misaligned_mass=0.391 agree=0.77 len=390 cap=0.34 lr=9.9e-06
+[step 90] loss=-0.0995 acc_in_batch=0.14 nondegen=0.31 misaligned_mass=0.372 agree=0.77 len=442 cap=0.44 lr=9.8e-06
+[step 100] loss=-0.1340 acc_in_batch=0.06 nondegen=0.19 misaligned_mass=0.250 agree=0.74 len=479 cap=0.64 lr=9.8e-06
+[step 100] >>> pass@1=0.355
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/targeted_deepmath_seed0/step100
+[step 110] loss=-0.0596 acc_in_batch=0.20 nondegen=0.38 misaligned_mass=0.500 agree=0.80 len=442 cap=0.56 lr=9.7e-06
+[step 120] loss=-0.0704 acc_in_batch=0.19 nondegen=0.31 misaligned_mass=0.491 agree=0.78 len=447 cap=0.52 lr=9.6e-06
+[step 130] loss=-0.1125 acc_in_batch=0.19 nondegen=0.38 misaligned_mass=0.339 agree=0.76 len=374 cap=0.28 lr=9.6e-06
+[step 140] loss=-0.0599 acc_in_batch=0.05 nondegen=0.19 misaligned_mass=0.406 agree=0.76 len=459 cap=0.53 lr=9.5e-06
+[step 150] loss=-0.2224 acc_in_batch=0.02 nondegen=0.06 misaligned_mass=0.116 agree=0.75 len=439 cap=0.59 lr=9.4e-06
+[step 150] >>> pass@1=0.325
+[step 160] loss=-0.1173 acc_in_batch=0.16 nondegen=0.38 misaligned_mass=0.361 agree=0.76 len=447 cap=0.48 lr=9.3e-06
+[step 170] loss=-0.0938 acc_in_batch=0.19 nondegen=0.38 misaligned_mass=0.370 agree=0.77 len=386 cap=0.25 lr=9.2e-06
+[step 180] loss=-0.1584 acc_in_batch=0.03 nondegen=0.12 misaligned_mass=0.228 agree=0.76 len=445 cap=0.52 lr=9.1e-06
+[step 190] loss=-0.0623 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.441 agree=0.77 len=422 cap=0.42 lr=9.0e-06
+[step 200] loss=-0.1089 acc_in_batch=0.14 nondegen=0.25 misaligned_mass=0.369 agree=0.77 len=436 cap=0.41 lr=8.9e-06
+[step 200] >>> pass@1=0.350
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/targeted_deepmath_seed0/step200
+[step 210] loss=-0.1050 acc_in_batch=0.09 nondegen=0.25 misaligned_mass=0.486 agree=0.77 len=428 cap=0.48 lr=8.7e-06
+[step 220] loss=-0.0919 acc_in_batch=0.11 nondegen=0.25 misaligned_mass=0.376 agree=0.75 len=435 cap=0.45 lr=8.6e-06
+[step 230] loss=-0.0644 acc_in_batch=0.08 nondegen=0.31 misaligned_mass=0.513 agree=0.77 len=412 cap=0.38 lr=8.5e-06
+[step 240] loss=-0.0958 acc_in_batch=0.14 nondegen=0.31 misaligned_mass=0.406 agree=0.78 len=438 cap=0.58 lr=8.3e-06
+[step 250] loss=-0.0912 acc_in_batch=0.12 nondegen=0.19 misaligned_mass=0.346 agree=0.76 len=413 cap=0.38 lr=8.2e-06
+[step 250] >>> pass@1=0.325
+[step 260] loss=-0.0471 acc_in_batch=0.20 nondegen=0.50 misaligned_mass=0.540 agree=0.78 len=424 cap=0.45 lr=8.1e-06
+[step 270] loss=-0.0861 acc_in_batch=0.14 nondegen=0.31 misaligned_mass=0.366 agree=0.76 len=410 cap=0.45 lr=7.9e-06
+[step 280] loss=-0.1855 acc_in_batch=0.08 nondegen=0.12 misaligned_mass=0.103 agree=0.77 len=398 cap=0.39 lr=7.8e-06
+[step 290] loss=-0.0158 acc_in_batch=0.19 nondegen=0.44 misaligned_mass=0.519 agree=0.78 len=413 cap=0.36 lr=7.6e-06
+[step 300] loss=-0.1008 acc_in_batch=0.14 nondegen=0.31 misaligned_mass=0.375 agree=0.75 len=395 cap=0.31 lr=7.4e-06
+[step 300] >>> pass@1=0.320
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/targeted_deepmath_seed0/step300
+[step 310] loss=-0.1294 acc_in_batch=0.16 nondegen=0.25 misaligned_mass=0.257 agree=0.79 len=443 cap=0.47 lr=7.3e-06
+[step 320] loss=-0.1052 acc_in_batch=0.16 nondegen=0.38 misaligned_mass=0.443 agree=0.76 len=404 cap=0.36 lr=7.1e-06
+[step 330] loss=-0.1563 acc_in_batch=0.14 nondegen=0.31 misaligned_mass=0.225 agree=0.80 len=444 cap=0.56 lr=6.9e-06
+[step 340] loss=-0.1563 acc_in_batch=0.06 nondegen=0.12 misaligned_mass=0.274 agree=0.80 len=428 cap=0.47 lr=6.8e-06
+[step 350] loss=-0.0683 acc_in_batch=0.23 nondegen=0.44 misaligned_mass=0.488 agree=0.76 len=421 cap=0.42 lr=6.6e-06
+[step 350] >>> pass@1=0.295
+(截至粘贴: 356/800, ~126.2s/步)
+
+=== mode=opd (r_t = d_t) ===
+[step 0] pass@1=0.315
+[step 10] loss=-0.3474 acc_in_batch=0.17 nondegen=0.38 len=449 cap=0.55 lr=5.0e-06
+[step 20] loss=-0.4206 acc_in_batch=0.14 nondegen=0.25 len=423 cap=0.38 lr=1.0e-05
+[step 30] loss=-0.2546 acc_in_batch=0.11 nondegen=0.31 len=419 cap=0.47 lr=1.0e-05
+[step 40] loss=-0.2297 acc_in_batch=0.00 nondegen=0.00 len=451 cap=0.52 lr=1.0e-05
+[step 50] loss=-0.1839 acc_in_batch=0.28 nondegen=0.56 len=399 cap=0.39 lr=1.0e-05
+[step 50] >>> pass@1=0.325
+[step 60] loss=-0.1916 acc_in_batch=0.14 nondegen=0.25 len=437 cap=0.52 lr=9.9e-06
+[step 70] loss=-0.2534 acc_in_batch=0.14 nondegen=0.38 len=452 cap=0.62 lr=9.9e-06
+[step 80] loss=-0.2365 acc_in_batch=0.22 nondegen=0.50 len=388 cap=0.36 lr=9.9e-06
+[step 90] loss=-0.2590 acc_in_batch=0.14 nondegen=0.31 len=424 cap=0.38 lr=9.8e-06
+[step 100] loss=-0.2433 acc_in_batch=0.08 nondegen=0.25 len=459 cap=0.52 lr=9.8e-06
+[step 100] >>> pass@1=0.360
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/opd_deepmath_seed0/step100
+[step 110] loss=-0.1521 acc_in_batch=0.22 nondegen=0.31 len=447 cap=0.55 lr=9.7e-06
+[step 120] loss=-0.2083 acc_in_batch=0.11 nondegen=0.31 len=434 cap=0.45 lr=9.6e-06
+[step 130] loss=-0.2136 acc_in_batch=0.20 nondegen=0.38 len=370 cap=0.27 lr=9.6e-06
+[step 140] loss=-0.2174 acc_in_batch=0.05 nondegen=0.19 len=484 cap=0.73 lr=9.5e-06
+[step 150] loss=-0.2360 acc_in_batch=0.08 nondegen=0.19 len=453 cap=0.61 lr=9.4e-06
+[step 150] >>> pass@1=0.335
+[step 160] loss=-0.2478 acc_in_batch=0.12 nondegen=0.31 len=450 cap=0.55 lr=9.3e-06
+[step 170] loss=-0.1718 acc_in_batch=0.12 nondegen=0.31 len=396 cap=0.28 lr=9.2e-06
+[step 180] loss=-0.2007 acc_in_batch=0.11 nondegen=0.19 len=437 cap=0.48 lr=9.1e-06
+[step 190] loss=-0.2383 acc_in_batch=0.17 nondegen=0.38 len=429 cap=0.53 lr=9.0e-06
+[step 200] loss=-0.2950 acc_in_batch=0.19 nondegen=0.38 len=452 cap=0.61 lr=8.9e-06
+[step 200] >>> pass@1=0.345
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/opd_deepmath_seed0/step200
+[step 210] loss=-0.2218 acc_in_batch=0.20 nondegen=0.44 len=416 cap=0.38 lr=8.7e-06
+[step 220] loss=-0.2079 acc_in_batch=0.16 nondegen=0.25 len=436 cap=0.48 lr=8.6e-06
+[step 230] loss=-0.1913 acc_in_batch=0.17 nondegen=0.38 len=399 cap=0.41 lr=8.5e-06
+[step 240] loss=-0.1952 acc_in_batch=0.14 nondegen=0.25 len=417 cap=0.41 lr=8.3e-06
+[step 250] loss=-0.1747 acc_in_batch=0.11 nondegen=0.19 len=412 cap=0.44 lr=8.2e-06
+[step 250] >>> pass@1=0.360
+[step 260] loss=-0.2780 acc_in_batch=0.30 nondegen=0.75 len=426 cap=0.44 lr=8.1e-06
+[step 270] loss=-0.1875 acc_in_batch=0.16 nondegen=0.31 len=409 cap=0.47 lr=7.9e-06
+[step 280] loss=-0.2136 acc_in_batch=0.28 nondegen=0.50 len=387 cap=0.31 lr=7.8e-06
+[step 290] loss=-0.1631 acc_in_batch=0.22 nondegen=0.38 len=422 cap=0.33 lr=7.6e-06
+[step 300] loss=-0.2060 acc_in_batch=0.16 nondegen=0.38 len=422 cap=0.38 lr=7.4e-06
+[step 300] >>> pass@1=0.345
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/opd_deepmath_seed0/step300
+[step 310] loss=-0.2059 acc_in_batch=0.22 nondegen=0.62 len=440 cap=0.44 lr=7.3e-06
+[step 320] loss=-0.2418 acc_in_batch=0.14 nondegen=0.31 len=426 cap=0.39 lr=7.1e-06
+[step 330] loss=-0.1810 acc_in_batch=0.08 nondegen=0.19 len=447 cap=0.55 lr=6.9e-06
+[step 340] loss=-0.2609 acc_in_batch=0.11 nondegen=0.25 len=419 cap=0.50 lr=6.8e-06
+[step 350] loss=-0.1964 acc_in_batch=0.22 nondegen=0.38 len=415 cap=0.44 lr=6.6e-06
+[step 350] >>> pass@1=0.360
+[step 360] loss=-0.1959 acc_in_batch=0.08 nondegen=0.19 len=427 cap=0.48 lr=6.4e-06
+(截至粘贴: 365/800, ~126.1s/步)
+
+=== mode=gopd (Tencent ExOPD, lambda=1.25) ===
+[step 0] pass@1=0.315
+[step 10] loss=-0.5331 acc_in_batch=0.20 nondegen=0.38 len=443 cap=0.47 lr=5.0e-06
+[step 20] loss=-0.5248 acc_in_batch=0.22 nondegen=0.44 len=398 cap=0.36 lr=1.0e-05
+[step 30] loss=-0.3625 acc_in_batch=0.09 nondegen=0.25 len=423 cap=0.41 lr=1.0e-05
+[step 40] loss=-0.2811 acc_in_batch=0.12 nondegen=0.25 len=445 cap=0.50 lr=1.0e-05
+[step 50] loss=-0.1923 acc_in_batch=0.19 nondegen=0.31 len=413 cap=0.34 lr=1.0e-05
+[step 50] >>> pass@1=0.345
+[step 60] loss=-0.2830 acc_in_batch=0.19 nondegen=0.31 len=427 cap=0.52 lr=9.9e-06
+[step 70] loss=-0.3400 acc_in_batch=0.19 nondegen=0.38 len=448 cap=0.58 lr=9.9e-06
+[step 80] loss=-0.2498 acc_in_batch=0.25 nondegen=0.50 len=423 cap=0.48 lr=9.9e-06
+[step 90] loss=-0.2755 acc_in_batch=0.08 nondegen=0.19 len=435 cap=0.48 lr=9.8e-06
+[step 100] loss=-0.2810 acc_in_batch=0.03 nondegen=0.06 len=463 cap=0.61 lr=9.8e-06
+[step 100] >>> pass@1=0.310
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/gopd_deepmath_seed0/step100
+[step 110] loss=-0.1790 acc_in_batch=0.08 nondegen=0.12 len=428 cap=0.41 lr=9.7e-06
+[step 120] loss=-0.2771 acc_in_batch=0.19 nondegen=0.38 len=429 cap=0.47 lr=9.6e-06
+[step 130] loss=-0.2058 acc_in_batch=0.25 nondegen=0.44 len=381 cap=0.30 lr=9.6e-06
+[step 140] loss=-0.2853 acc_in_batch=0.05 nondegen=0.19 len=470 cap=0.62 lr=9.5e-06
+[step 150] loss=-0.3047 acc_in_batch=0.09 nondegen=0.31 len=435 cap=0.52 lr=9.4e-06
+[step 150] >>> pass@1=0.350
+[step 160] loss=-0.2631 acc_in_batch=0.06 nondegen=0.19 len=450 cap=0.59 lr=9.3e-06
+[step 170] loss=-0.2441 acc_in_batch=0.17 nondegen=0.31 len=394 cap=0.25 lr=9.2e-06
+[step 180] loss=-0.2514 acc_in_batch=0.08 nondegen=0.19 len=420 cap=0.44 lr=9.1e-06
+[step 190] loss=-0.2438 acc_in_batch=0.17 nondegen=0.31 len=432 cap=0.41 lr=9.0e-06
+[step 200] loss=-0.2892 acc_in_batch=0.20 nondegen=0.38 len=444 cap=0.53 lr=8.9e-06
+[step 200] >>> pass@1=0.290
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/gopd_deepmath_seed0/step200
+[step 210] loss=-0.2910 acc_in_batch=0.16 nondegen=0.38 len=416 cap=0.42 lr=8.7e-06
+[step 220] loss=-0.2523 acc_in_batch=0.20 nondegen=0.44 len=454 cap=0.58 lr=8.6e-06
+[step 230] loss=-0.2363 acc_in_batch=0.09 nondegen=0.19 len=407 cap=0.34 lr=8.5e-06
+[step 240] loss=-0.2462 acc_in_batch=0.20 nondegen=0.38 len=417 cap=0.41 lr=8.3e-06
+[step 250] loss=-0.1728 acc_in_batch=0.17 nondegen=0.31 len=414 cap=0.47 lr=8.2e-06
+[step 250] >>> pass@1=0.360
+[step 260] loss=-0.3227 acc_in_batch=0.28 nondegen=0.56 len=412 cap=0.42 lr=8.1e-06
+[step 270] loss=-0.2402 acc_in_batch=0.08 nondegen=0.25 len=424 cap=0.47 lr=7.9e-06
+[step 280] loss=-0.2067 acc_in_batch=0.16 nondegen=0.31 len=403 cap=0.42 lr=7.8e-06
+[step 290] loss=-0.1918 acc_in_batch=0.14 nondegen=0.31 len=409 cap=0.34 lr=7.6e-06
+[step 300] loss=-0.2102 acc_in_batch=0.08 nondegen=0.25 len=400 cap=0.31 lr=7.4e-06
+[step 300] >>> pass@1=0.340
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/gopd_deepmath_seed0/step300
+[step 310] loss=-0.2755 acc_in_batch=0.16 nondegen=0.25 len=434 cap=0.38 lr=7.3e-06
+[step 320] loss=-0.2539 acc_in_batch=0.16 nondegen=0.38 len=415 cap=0.41 lr=7.1e-06
+[step 330] loss=-0.2160 acc_in_batch=0.11 nondegen=0.19 len=455 cap=0.62 lr=6.9e-06
+[step 340] loss=-0.2365 acc_in_batch=0.11 nondegen=0.19 len=447 cap=0.56 lr=6.8e-06
+[step 350] loss=-0.2242 acc_in_batch=0.19 nondegen=0.44 len=435 cap=0.52 lr=6.6e-06
+[step 350] >>> pass@1=0.325
+[step 360] loss=-0.2365 acc_in_batch=0.03 nondegen=0.12 len=436 cap=0.53 lr=6.4e-06
+(截至粘贴: 368/800, ~121.1s/步)

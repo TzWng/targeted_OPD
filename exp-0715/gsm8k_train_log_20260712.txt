@@ -1,0 +1,330 @@
+GSM8K 公平 harness 战役 — 训练日志（2026-07-12）
+配置: Qwen2.5-0.5B-Instruct (LoRA r=16, 8.80M/1.75%) <- Qwen2.5-Math-1.5B-Instruct
+GSM8K train, 800 步 x 2 题 x G=8 (12,800 rollouts/方法), 温度 1.0, lr 1e-5,
+kl_coef=0, vLLM rollout+eval, 训练期评测 n=100 (test[:100], 基座 0.470, 噪声 ±5pt)
+快照每 100 步 -> /content/drive/MyDrive/OPD/{mode}_gsm8k_seed0
+最终判决见 n=1000 快照复评 (gsm8k_fair_eval_verdict.md)
+
+=== mode=targeted (分半门控版 Algorithm 1) ===
+[step 0] pass@1=0.470
+[step 10] loss=-0.0081 acc_in_batch=0.38 nondegen=0.50 misaligned_mass=0.596 agree=0.77
+[step 20] loss=-0.0804 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.438 agree=0.76
+[step 30] loss=-0.0162 acc_in_batch=0.81 nondegen=1.00 misaligned_mass=0.560 agree=0.76
+[step 40] loss=-0.0104 acc_in_batch=0.12 nondegen=0.50 misaligned_mass=0.400 agree=0.71
+[step 50] loss=-0.1533 acc_in_batch=0.38 nondegen=0.50 misaligned_mass=0.473 agree=0.80
+[step 50] >>> pass@1=0.480
+[step 60] loss=-0.0713 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.551 agree=0.71
+[step 70] loss=-0.0694 acc_in_batch=0.38 nondegen=0.50 misaligned_mass=0.389 agree=0.79
+[step 80] loss=-0.0878 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.534 agree=0.80
+[step 90] loss=-0.4030 acc_in_batch=0.38 nondegen=1.00 misaligned_mass=0.380 agree=0.72
+[step 100] loss=-0.0751 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.489 agree=0.78
+[step 100] >>> pass@1=0.530
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step100
+[step 110] loss=-0.0612 acc_in_batch=0.12 nondegen=0.50 misaligned_mass=0.452 agree=0.83
+[step 120] loss=-0.0224 acc_in_batch=0.81 nondegen=1.00 misaligned_mass=0.560 agree=0.76
+[step 130] loss=-0.0611 acc_in_batch=0.25 nondegen=1.00 misaligned_mass=0.479 agree=0.72
+[step 140] loss=-0.1340 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.447 agree=0.80
+[step 150] loss=-0.0176 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.517 agree=0.76
+[step 150] >>> pass@1=0.560
+[step 160] loss=0.0138 acc_in_batch=0.12 nondegen=0.50 misaligned_mass=0.517 agree=0.80
+[step 170] loss=-0.0236 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.463 agree=0.82
+[step 180] loss=-0.1179 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.513 agree=0.74
+[step 190] loss=-0.0399 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.645 agree=0.80
+[step 200] loss=-0.1040 acc_in_batch=0.38 nondegen=1.00 misaligned_mass=0.430 agree=0.73
+[step 200] >>> pass@1=0.520
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step200
+[step 210] loss=0.1035 acc_in_batch=0.44 nondegen=1.00 misaligned_mass=0.516 agree=0.76
+[step 220] loss=-0.0238 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.470 agree=0.77
+[step 230] loss=-0.0406 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.383 agree=0.73
+[step 240] loss=-0.0300 acc_in_batch=0.56 nondegen=1.00 misaligned_mass=0.509 agree=0.75
+[step 250] loss=-0.0038 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.576 agree=0.74
+[step 250] >>> pass@1=0.510
+[step 260] loss=-0.1020 acc_in_batch=0.44 nondegen=1.00 misaligned_mass=0.444 agree=0.74
+[step 270] loss=-0.0022 acc_in_batch=0.69 nondegen=1.00 misaligned_mass=0.560 agree=0.74
+[step 280] loss=-0.0251 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.579 agree=0.77
+[step 290] loss=-0.0224 acc_in_batch=0.75 nondegen=1.00 misaligned_mass=0.448 agree=0.74
+[step 300] loss=-0.0962 acc_in_batch=0.69 nondegen=1.00 misaligned_mass=0.425 agree=0.76
+[step 300] >>> pass@1=0.530
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step300
+[step 310] loss=-0.0203 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.610 agree=0.77
+[step 320] loss=-0.0949 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.415 agree=0.79
+[step 330] loss=-0.1006 acc_in_batch=0.12 nondegen=1.00 misaligned_mass=0.476 agree=0.78
+[step 340] loss=-0.1098 acc_in_batch=0.38 nondegen=0.50 misaligned_mass=0.369 agree=0.73
+[step 350] loss=-0.0845 acc_in_batch=0.31 nondegen=0.50 misaligned_mass=0.445 agree=0.75
+[step 350] >>> pass@1=0.480
+[step 360] loss=-0.0273 acc_in_batch=0.25 nondegen=0.50 misaligned_mass=0.618 agree=0.76
+[step 370] loss=-0.0028 acc_in_batch=0.31 nondegen=0.50 misaligned_mass=0.547 agree=0.77
+[step 380] loss=-0.1242 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 390] loss=-0.0126 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.431 agree=0.77
+[step 400] loss=-0.0497 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.544 agree=0.76
+[step 400] >>> pass@1=0.510
+[ckpt] saved step 400 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step400
+[step 410] loss=-0.1044 acc_in_batch=0.38 nondegen=1.00 misaligned_mass=0.505 agree=0.78
+[step 420] loss=-0.0660 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.353 agree=0.75
+[step 430] loss=-0.0494 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.440 agree=0.74
+[step 440] loss=-0.0310 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.494 agree=0.78
+[step 450] loss=-0.0028 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.491 agree=0.77
+[step 450] >>> pass@1=0.510
+[step 460] loss=-0.1318 acc_in_batch=0.25 nondegen=0.50 misaligned_mass=0.318 agree=0.78
+[step 470] loss=-0.0856 acc_in_batch=0.12 nondegen=0.50 misaligned_mass=0.559 agree=0.75
+[step 480] loss=-0.0309 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.473 agree=0.74
+[step 490] loss=-0.1109 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.491 agree=0.78
+[step 500] loss=-0.0084 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.401 agree=0.77
+[step 500] >>> pass@1=0.480
+[ckpt] saved step 500 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step500
+[step 510] loss=-0.0725 acc_in_batch=0.38 nondegen=0.50 misaligned_mass=0.541 agree=0.72
+[step 520] loss=-0.0521 acc_in_batch=0.56 nondegen=1.00 misaligned_mass=0.427 agree=0.81
+[step 530] loss=-0.0248 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.571 agree=0.76
+[step 540] loss=-0.0285 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.529 agree=0.72
+[step 550] loss=-0.0485 acc_in_batch=0.56 nondegen=1.00 misaligned_mass=0.668 agree=0.81
+[step 550] >>> pass@1=0.460
+[step 560] loss=-0.0582 acc_in_batch=0.69 nondegen=1.00 misaligned_mass=0.476 agree=0.78
+[step 570] loss=-0.0520 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.569 agree=0.79
+[step 580] loss=-0.1241 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.483 agree=0.70
+[step 590] loss=-0.0902 acc_in_batch=0.31 nondegen=0.50 misaligned_mass=0.508 agree=0.74
+[step 600] loss=-0.0925 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.506 agree=0.76
+[step 600] >>> pass@1=0.510
+[ckpt] saved step 600 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step600
+[step 610] loss=-0.0548 acc_in_batch=0.62 nondegen=1.00 misaligned_mass=0.514 agree=0.82
+[step 620] loss=-0.0966 acc_in_batch=0.31 nondegen=0.50 misaligned_mass=0.480 agree=0.72
+[step 630] loss=-0.1930 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 640] loss=-0.0483 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.535 agree=0.77
+[step 650] loss=-0.0268 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.495 agree=0.78
+[step 650] >>> pass@1=0.470
+[step 660] loss=-0.0277 acc_in_batch=0.88 nondegen=1.00 misaligned_mass=0.515 agree=0.77
+[step 670] loss=0.0181 acc_in_batch=0.12 nondegen=0.50 misaligned_mass=0.628 agree=0.77
+[step 680] loss=-0.0746 acc_in_batch=0.69 nondegen=1.00 misaligned_mass=0.452 agree=0.75
+[step 690] loss=-0.1603 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 700] loss=-0.1588 acc_in_batch=0.50 nondegen=1.00 misaligned_mass=0.492 agree=0.80
+[step 700] >>> pass@1=0.480
+[ckpt] saved step 700 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step700
+[step 710] loss=-0.0143 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.534 agree=0.76
+[step 720] loss=-0.1406 acc_in_batch=0.56 nondegen=1.00 misaligned_mass=0.510 agree=0.79
+[step 730] loss=-0.0881 acc_in_batch=0.31 nondegen=0.50 misaligned_mass=0.442 agree=0.83
+[step 740] loss=-0.0153 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.529 agree=0.75
+[step 750] loss=-0.0301 acc_in_batch=0.06 nondegen=0.50 misaligned_mass=0.464 agree=0.77
+[step 750] >>> pass@1=0.500
+[step 760] loss=-0.1487 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 770] loss=-0.0480 acc_in_batch=0.44 nondegen=0.50 misaligned_mass=0.594 agree=0.74
+[step 780] loss=-0.1064 acc_in_batch=0.19 nondegen=0.50 misaligned_mass=0.484 agree=0.76
+[step 790] loss=-0.2424 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 800] loss=-0.1499 acc_in_batch=0.00 nondegen=0.00 misaligned_mass=0.000 agree=nan
+[step 800] >>> pass@1=0.470
+[ckpt] saved step 800 -> /content/drive/MyDrive/OPD/targeted_gsm8k_seed0/step800
+[final] mode=targeted pass@1=0.470
+eval history: [(0, 0.47), (50, 0.48), (100, 0.53), (150, 0.56), (200, 0.52), (250, 0.51), (300, 0.53), (350, 0.48), (400, 0.51), (450, 0.51), (500, 0.48), (550, 0.46), (600, 0.51), (650, 0.47), (700, 0.48), (750, 0.5), (800, 0.47)]
+
+=== mode=opd (r_t = d_t) ===
+[step 0] pass@1=0.470
+[step 10] loss=-0.2054 acc_in_batch=0.00 nondegen=0.00
+[step 20] loss=-0.1663 acc_in_batch=0.44 nondegen=0.50
+[step 30] loss=-0.1278 acc_in_batch=0.75 nondegen=1.00
+[step 40] loss=-0.1890 acc_in_batch=0.44 nondegen=1.00
+[step 50] loss=-0.2323 acc_in_batch=0.44 nondegen=0.50
+[step 50] >>> pass@1=0.480
+[step 60] loss=-0.1726 acc_in_batch=0.44 nondegen=0.50
+[step 70] loss=-0.0867 acc_in_batch=0.00 nondegen=0.00
+[step 80] loss=-0.3936 acc_in_batch=0.06 nondegen=0.50
+[step 90] loss=-0.1446 acc_in_batch=0.50 nondegen=1.00
+[step 100] loss=-0.1666 acc_in_batch=0.31 nondegen=0.50
+[step 100] >>> pass@1=0.500
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step100
+[step 110] loss=-0.0511 acc_in_batch=0.12 nondegen=0.50
+[step 120] loss=-0.1623 acc_in_batch=0.12 nondegen=0.50
+[step 130] loss=-0.3183 acc_in_batch=0.31 nondegen=0.50
+[step 140] loss=-0.2868 acc_in_batch=0.06 nondegen=0.50
+[step 150] loss=-0.2294 acc_in_batch=0.56 nondegen=1.00
+[step 150] >>> pass@1=0.540
+[step 160] loss=-0.4881 acc_in_batch=0.38 nondegen=1.00
+[step 170] loss=-0.1589 acc_in_batch=0.25 nondegen=0.50
+[step 180] loss=-0.1243 acc_in_batch=0.81 nondegen=1.00
+[step 190] loss=-0.2355 acc_in_batch=0.38 nondegen=0.50
+[step 200] loss=-0.1859 acc_in_batch=0.44 nondegen=1.00
+[step 200] >>> pass@1=0.520
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step200
+[step 210] loss=-0.3341 acc_in_batch=0.38 nondegen=1.00
+[step 220] loss=-0.0874 acc_in_batch=0.62 nondegen=1.00
+[step 230] loss=-0.1460 acc_in_batch=0.62 nondegen=1.00
+[step 240] loss=-0.1682 acc_in_batch=0.38 nondegen=0.50
+[step 250] loss=-0.2007 acc_in_batch=0.06 nondegen=0.50
+[step 250] >>> pass@1=0.480
+[step 260] loss=-0.1207 acc_in_batch=0.50 nondegen=1.00
+[step 270] loss=-0.0933 acc_in_batch=0.75 nondegen=1.00
+[step 280] loss=0.0055 acc_in_batch=0.00 nondegen=0.00
+[step 290] loss=-0.0699 acc_in_batch=0.44 nondegen=0.50
+[step 300] loss=-0.1733 acc_in_batch=0.12 nondegen=0.50
+[step 300] >>> pass@1=0.470
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step300
+[step 310] loss=-0.1952 acc_in_batch=0.38 nondegen=0.50
+[step 320] loss=-0.1078 acc_in_batch=0.19 nondegen=0.50
+[step 330] loss=-0.3360 acc_in_batch=0.19 nondegen=0.50
+[step 340] loss=-0.2040 acc_in_batch=0.44 nondegen=0.50
+[step 350] loss=-0.1466 acc_in_batch=0.44 nondegen=0.50
+[step 350] >>> pass@1=0.480
+[step 360] loss=-0.1487 acc_in_batch=0.25 nondegen=0.50
+[step 370] loss=-0.1391 acc_in_batch=0.81 nondegen=1.00
+[step 380] loss=-0.1419 acc_in_batch=0.31 nondegen=0.50
+[step 390] loss=-0.1538 acc_in_batch=0.38 nondegen=1.00
+[step 400] loss=-0.1550 acc_in_batch=0.31 nondegen=1.00
+[step 400] >>> pass@1=0.500
+[ckpt] saved step 400 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step400
+[step 410] loss=-0.1673 acc_in_batch=0.06 nondegen=0.50
+[step 420] loss=-0.1217 acc_in_batch=0.31 nondegen=0.50
+[step 430] loss=-0.1853 acc_in_batch=0.50 nondegen=1.00
+[step 440] loss=-0.1186 acc_in_batch=0.62 nondegen=1.00
+[step 450] loss=-0.0948 acc_in_batch=0.19 nondegen=0.50
+[step 450] >>> pass@1=0.520
+[step 460] loss=-0.2059 acc_in_batch=0.38 nondegen=0.50
+[step 470] loss=-0.2112 acc_in_batch=0.06 nondegen=0.50
+[step 480] loss=-0.1614 acc_in_batch=0.56 nondegen=1.00
+[step 490] loss=-0.2995 acc_in_batch=0.38 nondegen=0.50
+[step 500] loss=-0.0985 acc_in_batch=0.75 nondegen=1.00
+[step 500] >>> pass@1=0.470
+[ckpt] saved step 500 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step500
+[step 510] loss=-0.1255 acc_in_batch=0.44 nondegen=0.50
+[step 520] loss=-0.2708 acc_in_batch=0.12 nondegen=0.50
+[step 530] loss=-0.0518 acc_in_batch=0.00 nondegen=0.00
+[step 540] loss=-0.1428 acc_in_batch=0.12 nondegen=0.50
+[step 550] loss=-0.1436 acc_in_batch=0.88 nondegen=1.00
+[step 550] >>> pass@1=0.470
+[step 560] loss=-0.1429 acc_in_batch=0.75 nondegen=1.00
+[step 570] loss=-0.1738 acc_in_batch=0.44 nondegen=0.50
+[step 580] loss=-0.1302 acc_in_batch=0.44 nondegen=0.50
+[step 590] loss=-0.2614 acc_in_batch=0.19 nondegen=0.50
+[step 600] loss=-0.2299 acc_in_batch=0.50 nondegen=1.00
+[step 600] >>> pass@1=0.490
+[ckpt] saved step 600 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step600
+[step 610] loss=-0.1889 acc_in_batch=0.69 nondegen=1.00
+[step 620] loss=-0.1324 acc_in_batch=0.38 nondegen=0.50
+[step 630] loss=-0.1695 acc_in_batch=0.38 nondegen=0.50
+[step 640] loss=-0.1646 acc_in_batch=0.44 nondegen=0.50
+[step 650] loss=-0.0395 acc_in_batch=0.81 nondegen=1.00
+[step 650] >>> pass@1=0.500
+[step 660] loss=-0.1872 acc_in_batch=0.44 nondegen=0.50
+[step 670] loss=-0.2011 acc_in_batch=0.50 nondegen=1.00
+[step 680] loss=-0.1747 acc_in_batch=0.69 nondegen=1.00
+[step 690] loss=-0.1607 acc_in_batch=0.56 nondegen=1.00
+[step 700] loss=-0.3635 acc_in_batch=0.44 nondegen=1.00
+[step 700] >>> pass@1=0.530
+[ckpt] saved step 700 -> /content/drive/MyDrive/OPD/opd_gsm8k_seed0/step700
+[step 710] loss=-0.2663 acc_in_batch=0.31 nondegen=0.50
+[step 720] loss=-0.3356 acc_in_batch=0.75 nondegen=1.00
+[step 730] loss=-0.2239 acc_in_batch=0.00 nondegen=0.00
+[step 740] loss=-0.1540 acc_in_batch=0.12 nondegen=0.50
+[step 750] loss=-0.1159 acc_in_batch=0.62 nondegen=1.00
+[step 750] >>> pass@1=0.500
+[step 760] loss=-0.1081 acc_in_batch=0.88 nondegen=1.00
+[step 770] loss=-0.0838 acc_in_batch=0.44 nondegen=0.50
+[step 780] loss=-0.1796 acc_in_batch=0.44 nondegen=1.00
+[step 790] loss=-0.1816 acc_in_batch=0.31 nondegen=0.50
+(注: 日志粘贴时运行在 790/800, step 800 训练期值未留档;
+ step800 快照存在, 其 n=1000 复评值 = 基座+0.6, 见 gsm8k_fair_eval_verdict.md)
+
+=== mode=gopd (Tencent ExOPD, lambda=1.25) ===
+[step 0] pass@1=0.470
+[step 10] loss=-0.5356 acc_in_batch=0.31 nondegen=0.50
+[step 20] loss=-0.3617 acc_in_batch=0.81 nondegen=1.00
+[step 30] loss=-0.1778 acc_in_batch=0.69 nondegen=1.00
+[step 40] loss=-0.2884 acc_in_batch=0.50 nondegen=1.00
+[step 50] loss=-0.2734 acc_in_batch=0.38 nondegen=1.00
+[step 50] >>> pass@1=0.500
+[step 60] loss=-0.2327 acc_in_batch=0.19 nondegen=0.50
+[step 70] loss=-0.1090 acc_in_batch=0.00 nondegen=0.00
+[step 80] loss=-0.5443 acc_in_batch=0.12 nondegen=1.00
+[step 90] loss=-0.1832 acc_in_batch=0.62 nondegen=1.00
+[step 100] loss=-0.2255 acc_in_batch=0.31 nondegen=0.50
+[step 100] >>> pass@1=0.510
+[ckpt] saved step 100 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step100
+[step 110] loss=-0.1428 acc_in_batch=0.12 nondegen=0.50
+[step 120] loss=-0.2788 acc_in_batch=0.25 nondegen=0.50
+[step 130] loss=-0.1432 acc_in_batch=0.44 nondegen=1.00
+[step 140] loss=-0.2742 acc_in_batch=0.44 nondegen=0.50
+[step 150] loss=-0.2441 acc_in_batch=0.06 nondegen=0.50
+[step 150] >>> pass@1=0.570
+[step 160] loss=-0.5770 acc_in_batch=0.44 nondegen=1.00
+[step 170] loss=-0.1621 acc_in_batch=0.19 nondegen=0.50
+[step 180] loss=-0.1302 acc_in_batch=0.81 nondegen=1.00
+[step 190] loss=-0.2383 acc_in_batch=0.00 nondegen=0.00
+[step 200] loss=-0.2888 acc_in_batch=0.31 nondegen=1.00
+[step 200] >>> pass@1=0.520
+[ckpt] saved step 200 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step200
+[step 210] loss=-0.4341 acc_in_batch=0.25 nondegen=1.00
+[step 220] loss=-0.1432 acc_in_batch=0.62 nondegen=1.00
+[step 230] loss=-0.2063 acc_in_batch=0.62 nondegen=1.00
+[step 240] loss=-0.3349 acc_in_batch=0.06 nondegen=0.50
+[step 250] loss=-0.1965 acc_in_batch=0.12 nondegen=1.00
+[step 250] >>> pass@1=0.490
+[step 260] loss=-0.1558 acc_in_batch=0.31 nondegen=1.00
+[step 270] loss=-0.1641 acc_in_batch=0.19 nondegen=0.50
+[step 280] loss=-0.1946 acc_in_batch=0.44 nondegen=0.50
+[step 290] loss=-0.1039 acc_in_batch=0.38 nondegen=0.50
+[step 300] loss=-0.2062 acc_in_batch=0.50 nondegen=1.00
+[step 300] >>> pass@1=0.450
+[ckpt] saved step 300 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step300
+[step 310] loss=-0.1279 acc_in_batch=0.69 nondegen=1.00
+[step 320] loss=-0.2456 acc_in_batch=0.00 nondegen=0.00
+[step 330] loss=-0.3998 acc_in_batch=0.19 nondegen=1.00
+[step 340] loss=-0.1625 acc_in_batch=0.00 nondegen=0.00
+[step 350] loss=-0.2299 acc_in_batch=0.38 nondegen=0.50
+[step 350] >>> pass@1=0.500
+[step 360] loss=-0.2012 acc_in_batch=0.25 nondegen=0.50
+[step 370] loss=-0.1985 acc_in_batch=0.56 nondegen=1.00
+[step 380] loss=-0.2057 acc_in_batch=0.38 nondegen=0.50
+[step 390] loss=-0.2110 acc_in_batch=0.56 nondegen=1.00
+[step 400] loss=-0.1619 acc_in_batch=0.25 nondegen=1.00
+[step 400] >>> pass@1=0.500
+[ckpt] saved step 400 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step400
+[step 410] loss=-0.2404 acc_in_batch=0.44 nondegen=1.00
+[step 420] loss=-0.1544 acc_in_batch=0.19 nondegen=0.50
+[step 430] loss=-0.1313 acc_in_batch=0.62 nondegen=1.00
+[step 440] loss=-0.1144 acc_in_batch=0.50 nondegen=1.00
+[step 450] loss=-0.1451 acc_in_batch=0.69 nondegen=1.00
+[step 450] >>> pass@1=0.480
+[step 460] loss=-0.2034 acc_in_batch=0.38 nondegen=0.50
+[step 470] loss=-0.2176 acc_in_batch=0.12 nondegen=0.50
+[step 480] loss=-0.0931 acc_in_batch=0.19 nondegen=0.50
+[step 490] loss=-0.3330 acc_in_batch=0.19 nondegen=0.50
+[step 500] loss=-0.1818 acc_in_batch=0.56 nondegen=1.00
+[step 500] >>> pass@1=0.490
+[ckpt] saved step 500 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step500
+[step 510] loss=-0.1998 acc_in_batch=0.69 nondegen=1.00
+[step 520] loss=-0.2303 acc_in_batch=0.19 nondegen=0.50
+[step 530] loss=-0.0858 acc_in_batch=0.44 nondegen=0.50
+[step 540] loss=-0.1840 acc_in_batch=0.44 nondegen=1.00
+[step 550] loss=-0.0969 acc_in_batch=0.50 nondegen=1.00
+[step 550] >>> pass@1=0.470
+[step 560] loss=-0.1043 acc_in_batch=0.75 nondegen=1.00
+[step 570] loss=-0.2841 acc_in_batch=0.06 nondegen=0.50
+[step 580] loss=-0.1288 acc_in_batch=0.44 nondegen=0.50
+[step 590] loss=-0.2977 acc_in_batch=0.25 nondegen=0.50
+[step 600] loss=-0.2689 acc_in_batch=0.44 nondegen=1.00
+[step 600] >>> pass@1=0.510
+[ckpt] saved step 600 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step600
+[step 610] loss=-0.1621 acc_in_batch=0.81 nondegen=1.00
+[step 620] loss=-0.2017 acc_in_batch=0.44 nondegen=0.50
+[step 630] loss=-0.1270 acc_in_batch=0.38 nondegen=0.50
+[step 640] loss=-0.1787 acc_in_batch=0.44 nondegen=1.00
+[step 650] loss=-0.1375 acc_in_batch=0.81 nondegen=1.00
+[step 650] >>> pass@1=0.500
+[step 660] loss=-0.2384 acc_in_batch=0.38 nondegen=0.50
+[step 670] loss=-0.2089 acc_in_batch=0.44 nondegen=1.00
+[step 680] loss=-0.1686 acc_in_batch=0.38 nondegen=1.00
+[step 690] loss=-0.2089 acc_in_batch=0.56 nondegen=1.00
+[step 700] loss=-0.4491 acc_in_batch=0.38 nondegen=1.00
+[step 700] >>> pass@1=0.510
+[ckpt] saved step 700 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step700
+[step 710] loss=-0.2294 acc_in_batch=0.25 nondegen=0.50
+[step 720] loss=-0.3075 acc_in_batch=0.62 nondegen=1.00
+[step 730] loss=-0.2247 acc_in_batch=0.69 nondegen=1.00
+[step 740] loss=-0.1418 acc_in_batch=0.62 nondegen=1.00
+[step 750] loss=-0.1392 acc_in_batch=0.06 nondegen=0.50
+[step 750] >>> pass@1=0.500
+[step 760] loss=-0.1159 acc_in_batch=0.75 nondegen=1.00
+[step 770] loss=-0.0814 acc_in_batch=0.44 nondegen=0.50
+[step 780] loss=-0.2588 acc_in_batch=0.44 nondegen=1.00
+[step 790] loss=-0.2293 acc_in_batch=0.44 nondegen=1.00
+[step 800] loss=-0.1132 acc_in_batch=0.38 nondegen=0.50
+[step 800] >>> pass@1=0.530
+[ckpt] saved step 800 -> /content/drive/MyDrive/OPD/gopd_gsm8k_seed0/step800
+[final] mode=gopd pass@1=0.530
+eval history: [(0, 0.47), (50, 0.5), (100, 0.51), (150, 0.57), (200, 0.52), (250, 0.49), (300, 0.45), (350, 0.5), (400, 0.5), (450, 0.48), (500, 0.49), (550, 0.47), (600, 0.51), (650, 0.5), (700, 0.51), (750, 0.5), (800, 0.53)]
